@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System.Runtime.InteropServices;
+using System.Security.Principal;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -7,6 +8,7 @@ namespace AsyncAwaitExample
     [TestFixture]
     public class WhenCoachCancelsPractice
     {
+        private Coach _coach;
         private IParent _parent0;
         private IParent _parent1;
         private IParent _parent2;
@@ -18,9 +20,8 @@ namespace AsyncAwaitExample
             _parent1 = MockRepository.GenerateStub<IParent>();
             _parent2 = MockRepository.GenerateStub<IParent>();
 
-            _parent0.Notify();
-            _parent1.Notify();
-            _parent2.Notify();
+            _coach = new Coach(_parent0, _parent1, _parent2);
+            _coach.CancelPractice();
         }
 
         [Test]
@@ -44,6 +45,24 @@ namespace AsyncAwaitExample
         private void AssertParentNotified(IParent parent)
         {
             parent.AssertWasCalled(theParent => theParent.Notify());
+        }
+    }
+
+    public class Coach
+    {
+        private readonly IParent[] _rootNotificationParents;
+
+        public Coach(params IParent[] rootNotificationParents)
+        {
+            _rootNotificationParents = rootNotificationParents;
+        }
+
+        public void CancelPractice()
+        {
+            foreach (var parent in _rootNotificationParents)
+            {
+                parent.Notify();
+            }
         }
     }
 
