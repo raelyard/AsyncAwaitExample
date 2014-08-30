@@ -9,18 +9,24 @@ namespace AsyncAwaitExample
     public class WhenCoachCancelsPractice
     {
         private Coach _coach;
-        private Parent _parent0;
-        private Parent _parent1;
-        private Parent _parent2;
+        private Parent _level1Parent0;
+        private Parent _level1Parent1;
+        private Parent _level1Parent2;
+        private Parent _level2Parent0;
+        private Parent _level2Parent1;
+        private Parent _level2Parent2;
 
         [SetUp]
         public void Setup()
         {
-            _parent0 = new Parent("parent0");
-            _parent1 = new Parent("parent1");
-            _parent2 = new Parent("parent2");
+            _level1Parent0 = new Parent("parent0");
+            _level1Parent1 = new Parent("parent1");
+            _level1Parent2 = new Parent("parent2");
+            _level2Parent0 = new Parent("parent3");
+            _level2Parent1 = new Parent("parent4");
+            _level2Parent2 = new Parent("parent5");
 
-            _coach = new Coach(_parent0, _parent1, _parent2);
+            _coach = new Coach(_level1Parent0, _level1Parent1, _level1Parent2, _level2Parent0, _level2Parent1, _level2Parent2);
         }
 
         private async Task ExecuteCancelPractice()
@@ -30,42 +36,81 @@ namespace AsyncAwaitExample
         }
 
         [Test]
-        public void ShouldNotCallParent0WithoutCancellation()
+        public void ShouldNotCallLevel1Parent0WithoutCancellation()
         {
-            AssertParentNotNotified(_parent0);
+            AssertParentNotNotified(_level1Parent0);
         }
 
         [Test]
-        public void ShouldNotCallParent1WithoutCancellation()
+        public void ShouldNotCallLevel1Parent1WithoutCancellation()
         {
-            AssertParentNotNotified(_parent1);
+            AssertParentNotNotified(_level1Parent1);
         }
 
         [Test]
-        public void ShouldNotCallParent2WithoutCancellation()
+        public void ShouldNotCallLevel1Parent2WithoutCancellation()
         {
-            AssertParentNotNotified(_parent2);
+            AssertParentNotNotified(_level1Parent2);
         }
 
         [Test]
-        public async Task ShouldCallParent0()
+        public void ShouldNotCallLevel2Parent0WithoutCancellation()
+        {
+            AssertParentNotNotified(_level2Parent0);
+        }
+
+        [Test]
+        public void ShouldNotCallLevel2Parent1WithoutCancellation()
+        {
+            AssertParentNotNotified(_level2Parent1);
+        }
+
+        [Test]
+        public void ShouldNotCallLevel2Parent2WithoutCancellation()
+        {
+            AssertParentNotNotified(_level2Parent2);
+        }
+
+        [Test]
+        public async Task ShouldCallLevel1Parent0()
         {
             await ExecuteCancelPractice();
-            AssertParentNotified(_parent0);
+            AssertParentNotified(_level1Parent0);
         }
 
         [Test]
-        public async Task ShouldCallParent1()
+        public async Task ShouldCallLevel1Parent1()
         {
             await ExecuteCancelPractice();
-            AssertParentNotified(_parent1);
+            AssertParentNotified(_level1Parent1);
         }
 
         [Test]
-        public async Task ShouldCallParent2()
+        public async Task ShouldCallLevel1Parent2()
         {
             await ExecuteCancelPractice();
-            AssertParentNotified(_parent2);
+            AssertParentNotified(_level1Parent2);
+        }
+
+        [Test]
+        public async Task ShouldCallLevel2Parent0()
+        {
+            await ExecuteCancelPractice();
+            AssertParentNotified(_level2Parent0);
+        }
+
+        [Test]
+        public async Task ShouldCallLevel2Parent1()
+        {
+            await ExecuteCancelPractice();
+            AssertParentNotified(_level2Parent1);
+        }
+
+        [Test]
+        public async Task ShouldCallLevel2Parent2()
+        {
+            await ExecuteCancelPractice();
+            AssertParentNotified(_level2Parent2);
         }
 
         private void AssertParentNotNotified(Parent parent)
