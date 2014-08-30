@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Rhino.Mocks;
+using Should;
 
 namespace AsyncAwaitExample
 {
@@ -13,41 +13,69 @@ namespace AsyncAwaitExample
         private Parent _parent1;
         private Parent _parent2;
 
-        private async Task ArrangeAct()
+        [SetUp]
+        public void Setup()
         {
-            _parent0 = MockRepository.GeneratePartialMock<Parent>("parent0");
-            _parent1 = MockRepository.GeneratePartialMock<Parent>("parent1");
-            _parent2 = MockRepository.GeneratePartialMock<Parent>("parent2");
+            _parent0 = new Parent("parent0");
+            _parent1 = new Parent("parent1");
+            _parent2 = new Parent("parent2");
 
             _coach = new Coach(_parent0, _parent1, _parent2);
+        }
+
+        private async Task ExecuteCancelPractice()
+        {
             await _coach.CancelPractice();
             Console.WriteLine("Coach has finished");
         }
 
         [Test]
+        public void ShouldNotCallParent0WithoutCancellation()
+        {
+            AssertParentNotNotified(_parent0);
+        }
+
+        [Test]
+        public void ShouldNotCallParent1WithoutCancellation()
+        {
+            AssertParentNotNotified(_parent1);
+        }
+
+        [Test]
+        public void ShouldNotCallParent2WithoutCancellation()
+        {
+            AssertParentNotNotified(_parent2);
+        }
+
+        [Test]
         public async Task ShouldCallParent0()
         {
-            await ArrangeAct();
+            await ExecuteCancelPractice();
             AssertParentNotified(_parent0);
         }
 
         [Test]
         public async Task ShouldCallParent1()
         {
-            await ArrangeAct();
+            await ExecuteCancelPractice();
             AssertParentNotified(_parent1);
         }
 
         [Test]
         public async Task ShouldCallParent2()
         {
-            await ArrangeAct();
+            await ExecuteCancelPractice();
             AssertParentNotified(_parent2);
+        }
+
+        private void AssertParentNotNotified(Parent parent)
+        {
+            parent.Notified.ShouldBeFalse();
         }
 
         private void AssertParentNotified(Parent parent)
         {
-            parent.AssertWasCalled(theParent => theParent.Notify());
+            parent.Notified.ShouldBeTrue();
         }
     }
 }
