@@ -19,14 +19,15 @@ namespace AsyncAwaitExample
         [SetUp]
         public void Setup()
         {
-            _level1Parent0 = new Parent("parent0");
             _level1Parent1 = new Parent("parent1");
             _level1Parent2 = new Parent("parent2");
             _level2Parent0 = new Parent("parent3");
             _level2Parent1 = new Parent("parent4");
             _level2Parent2 = new Parent("parent5");
 
-            _coach = new Coach(_level1Parent0, _level1Parent1, _level1Parent2, _level2Parent0, _level2Parent1, _level2Parent2);
+            _level1Parent0 = new Parent("parent0", _level2Parent0, _level2Parent1, _level2Parent2);
+
+            _coach = new Coach(_level1Parent0, _level1Parent1, _level1Parent2);
         }
 
         private async Task ExecuteCancelPractice()
