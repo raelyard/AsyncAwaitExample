@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Coach.cs" />
+    <Compile Include="Parent.cs" />
     <Compile Include="PhoneTreeExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
